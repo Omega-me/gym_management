@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model client {
+  id              Int               @id @default(autoincrement())
+  first_name      String            @db.VarChar(20)
+  last_name       String            @db.VarChar(20)
+  gender          client_gender
+  phone           String            @db.VarChar(20)
+  gym_client_join gym_client_join[]
+  membership      membership[]
+}
+
+model employee {
+  id                                                       Int                    @id @default(autoincrement())
+  first_name                                               String                 @db.VarChar(20)
+  last_name                                                String                 @db.VarChar(20)
+  gender                                                   employee_gender
+  position_type                                            employee_position_type
+  email                                                    String                 @db.VarChar(20)
+  phone                                                    String                 @db.VarChar(20)
+  id_gym                                                   Int
+  id_manager                                               Int
+  gym                                                      gym                    @relation(fields: [id_gym], references: [id], onUpdate: Restrict, map: "employee_gym_fk")
+  manager                                                  manager                @relation(fields: [id_manager], references: [id], onUpdate: Restrict, map: "employee_manager_fk")
+  membership_membership_id_dietitianToemployee             membership[]           @relation("membership_id_dietitianToemployee")
+  membership_membership_id_exercise_physiologistToemployee membership[]           @relation("membership_id_exercise_physiologistToemployee")
+  membership_membership_id_fitness_consultantToemployee    membership[]           @relation("membership_id_fitness_consultantToemployee")
+  membership_membership_id_personal_trainerToemployee      membership[]           @relation("membership_id_personal_trainerToemployee")
+
+  @@index([id_gym], map: "employee_gym_fk")
+  @@index([id_manager], map: "employee_manager_fk")
+}
+
+model gym {
+  id              Int               @id @default(autoincrement())
+  name            String            @db.VarChar(40)
+  address         String            @db.VarChar(100)
+  phone           String            @db.VarChar(20)
+  employee        employee[]
+  gym_client_join gym_client_join[]
+  manager         manager[]
+  membership      membership[]
+}
+
+model gym_client_join {
+  id        Int    @id @default(autoincrement())
+  id_gym    Int
+  id_client Int
+  client    client @relation(fields: [id_client], references: [id], onUpdate: Restrict, map: "gym_client_join_client_fk")
+  gym       gym    @relation(fields: [id_gym], references: [id], onUpdate: Restrict, map: "gym_client_join_gym_fk")
+
+  @@index([id_client], map: "gym_client_join_client_fk")
+  @@index([id_gym], map: "gym_client_join_gym_fk")
+}
+
+model logs {
+  id         Int            @id @default(autoincrement())
+  table_name String         @db.VarChar(50)
+  operation  logs_operation
+  date       DateTime       @db.Date
+}
+
+model manager {
+  id         Int            @id @default(autoincrement())
+  first_name String         @db.VarChar(20)
+  last_name  String         @db.VarChar(20)
+  gender     manager_gender
+  email      String         @db.VarChar(20)
+  phone      String         @db.VarChar(20)
+  id_gym     Int
+  employee   employee[]
+  gym        gym            @relation(fields: [id_gym], references: [id], onUpdate: Restrict, map: "manager_gym_fk")
+
+  @@index([id_gym], map: "manager_gym_fk")
+}
+
+model membership {
+  id                                                     Int       @id @default(autoincrement())
+  id_gym                                                 Int
+  id_client                                              Int
+  id_manager                                             Int
+  id_personal_trainer                                    Int?
+  id_fitness_consultant                                  Int?
+  id_dietitian                                           Int?
+  id_exercise_physiologist                               Int?
+  client                                                 client    @relation(fields: [id_client], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "membership_client_fk")
+  employee_membership_id_dietitianToemployee             employee? @relation("membership_id_dietitianToemployee", fields: [id_dietitian], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "membership_dietitian_fk")
+  employee_membership_id_exercise_physiologistToemployee employee? @relation("membership_id_exercise_physiologistToemployee", fields: [id_exercise_physiologist], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "membership_exercise_psichologist_fk")
+  employee_membership_id_fitness_consultantToemployee    employee? @relation("membership_id_fitness_consultantToemployee", fields: [id_fitness_consultant], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "membership_fitness_consultant_fk")
+  gym                                                    gym       @relation(fields: [id_gym], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "membership_gym_fk")
+  employee_membership_id_personal_trainerToemployee      employee? @relation("membership_id_personal_trainerToemployee", fields: [id_personal_trainer], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "membership_personal_trainer_fk")
+
+  @@index([id_client], map: "membership_client_fk")
+  @@index([id_dietitian], map: "membership_dietitian_fk")
+  @@index([id_exercise_physiologist], map: "membership_exercise_psichologist_fk")
+  @@index([id_fitness_consultant], map: "membership_fitness_consultant_fk")
+  @@index([id_gym], map: "membership_gym_fk")
+  @@index([id_manager], map: "membership_manager_fk")
+  @@index([id_personal_trainer], map: "membership_personal_trainer_fk")
+}
+
+enum logs_operation {
+  Insert
+  Update
+  Delete
+}
+
+enum client_gender {
+  Male
+  Female
+}
+
+enum employee_gender {
+  Male
+  Female
+}
+
+enum manager_gender {
+  Male
+  Female
+}
+
+enum employee_position_type {
+  Personal_Trainer      @map("Personal Trainer")
+  Front_Desk            @map("Front Desk")
+  Fitness_Consultant    @map("Fitness Consultant")
+  Dietitian
+  Exercise_Physiologist @map("Exercise Physiologist")
+}
