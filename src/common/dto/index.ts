@@ -1,1 +1,1 @@
-export * from './gymDTO';
+export * from './GymDTO';
