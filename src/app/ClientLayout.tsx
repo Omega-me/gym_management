@@ -5,6 +5,7 @@ import { Layout, Menu } from 'antd';
 import s from './page.module.scss';
 import { MenuItemType } from 'antd/es/menu/hooks/useItems';
 import { useRouter } from 'next/navigation';
+import { eApiRoutes } from '@/common/enums';
 const { Header, Content, Footer, Sider } = Layout;
 
 const ClientLayout = ({
@@ -28,7 +29,7 @@ const ClientLayout = ({
       icon: <MediumOutlined />,
       label: 'Managers',
       onClick: () => {
-        console.log('clicked');
+        router.push(eApiRoutes.MANAGERS);
       },
     },
     {
@@ -36,7 +37,7 @@ const ClientLayout = ({
       icon: <TeamOutlined />,
       label: 'Employees',
       onClick: () => {
-        console.log('clicked');
+        router.push(eApiRoutes.EMPLOYEES);
       },
     },
     {
@@ -44,7 +45,7 @@ const ClientLayout = ({
       icon: <SmileOutlined />,
       label: 'Clients',
       onClick: () => {
-        console.log('clicked');
+        router.push(eApiRoutes.CLIENTS);
       },
     },
     {
@@ -52,7 +53,7 @@ const ClientLayout = ({
       icon: <CalendarOutlined />,
       label: 'Memberships',
       onClick: () => {
-        console.log('clicked');
+        router.push(eApiRoutes.MEMBERSHIPS);
       },
     },
   ];

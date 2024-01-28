@@ -1,2 +1,10 @@
 export { default as HomeModule } from './home/Home.module';
 export { default as GymDetailsModule } from './gymdetails/GymDetails.module';
+export { default as ManagersModule } from './managers/Managers.module';
+export { default as ClientsModule } from './clients/Clients.module';
+export { default as MembershipsModule } from './memberships/Memberships.module';
+export { default as EmployeesModule } from './employees/Employees.module';
+export { default as ManagerDetailsModule } from './managerdetails/ManagerDetails.module';
+export { default as ClientdetailsModule } from './clientdetails/Clientdetails.module';
+export { default as EmployeeDetailsModule } from './employeedetails/EmployeeDetails.module';
+export { default as MembershipDetailsModule } from './membershipdetails/MembershipDetails.module';

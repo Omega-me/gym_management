@@ -8,7 +8,7 @@ import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/re
  *
  * @param opts
  */
-export const prefetchGyms = async <TData,>(opts: { queryClient: QueryClient; config?: IQueryOpts<TData> }) => {
+export const prefetchGym = async <TData,>(opts: { queryClient: QueryClient; config?: IQueryOpts<TData> }) => {
   const route = eApiRoutes.GYMS;
 
   const { url, keys, axiosConfig } = generatUrlAndKeys({
@@ -34,7 +34,7 @@ export const prefetchGyms = async <TData,>(opts: { queryClient: QueryClient; con
  * @param opts
  * @returns
  */
-export const useGymsQuery = <TData,>(opts?: IQueryOpts<TData>) => {
+export const useGymQuery = <TData,>(opts?: IQueryOpts<TData>) => {
   const queryClient = useQueryClient();
   const route = eApiRoutes.GYMS;
 
@@ -70,7 +70,7 @@ export const useGymsQuery = <TData,>(opts?: IQueryOpts<TData>) => {
  *
  * @param opts
  */
-export const useGymsMutation = <TData,>(opts?: IMutationOpts<TData>) => {
+export const useGymMutation = <TData,>(opts?: IMutationOpts<TData>) => {
   const queryClient = useQueryClient();
   const route = eApiRoutes.GYMS;
   const { url, keys, axiosConfig, methode, hasInvalidation, hasErrorHandling } = generatUrlAndKeys<TData>({

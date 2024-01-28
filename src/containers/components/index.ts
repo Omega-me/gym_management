@@ -1,3 +1,13 @@
-export { default as Home } from './home/Home';
+export { default as TableContainer } from './tablecontainer/TableContainer';
 export { default as GymDetails } from './gymdetails/GymDetails';
 export { default as ShowGymDetails } from './showgymdetails/ShowGymDetails';
+export { default as CustomInput } from './custominput/CustomInput';
+export { default as Home } from './home/Home';
+export { default as Managers } from './managers/Managers';
+export { default as Clients } from './clients/Clients';
+export { default as Memberships } from './memberships/Memberships';
+export { default as Employees } from './employees/Employees';
+export { default as ManagerDetails } from './managerdetails/ManagerDetails';
+export { default as ClientDetails } from './clientdetails/ClientDetails';
+export { default as EmployeeDetails } from './employeedetails/EmployeeDetails';
+export { default as MembershipDetails } from './membershipdetails/MembershipDetails';

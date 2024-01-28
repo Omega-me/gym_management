@@ -19,21 +19,8 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
       id: Number(params.id),
     },
     include: {
-      manager: {
-        where: {
-          id_gym: Number(params.id),
-        },
-      },
-      employee: {
-        where: {
-          id_gym: Number(params.id),
-        },
-      },
-      membership: {
-        where: {
-          id_gym: Number(params.id),
-        },
-      },
+      manager: {},
+      employee: {},
     },
   });
   if (!data) {
@@ -47,6 +34,57 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
       },
     );
   }
+
+  return NextResponse.json(data);
+}
+
+export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+  if (isNaN(Number(params.id))) {
+    return NextResponse.json(
+      {
+        error: `Invalid id ${params.id}`,
+        status: eStatusCode.INTERNAL_SERVER_ERROR,
+      },
+      {
+        status: eStatusCode.INTERNAL_SERVER_ERROR,
+      },
+    );
+  }
+
+  await prisma.gym.delete({
+    where: {
+      id: Number(params.id),
+    },
+  });
+
+  return NextResponse.json(
+    {},
+    {
+      status: eStatusCode.NO_CONTENT,
+    },
+  );
+}
+
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+  if (isNaN(Number(params.id))) {
+    return NextResponse.json(
+      {
+        error: `Invalid id ${params.id}`,
+        status: eStatusCode.INTERNAL_SERVER_ERROR,
+      },
+      {
+        status: eStatusCode.INTERNAL_SERVER_ERROR,
+      },
+    );
+  }
+  const body = await req.json();
+
+  const data = await prisma.gym.update({
+    data: body,
+    where: {
+      id: Number(params.id),
+    },
+  });
 
   return NextResponse.json(data);
 }
