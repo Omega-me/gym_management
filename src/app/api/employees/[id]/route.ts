@@ -7,10 +7,10 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
     return NextResponse.json(
       {
         error: `Invalid id ${params.id}`,
-        status: eStatusCode.INTERNAL_SERVER_ERROR,
+        status: eStatusCode.CONFLICT,
       },
       {
-        status: eStatusCode.INTERNAL_SERVER_ERROR,
+        status: eStatusCode.CONFLICT,
       },
     );
   }
@@ -43,10 +43,10 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
     return NextResponse.json(
       {
         error: `Invalid id ${params.id}`,
-        status: eStatusCode.INTERNAL_SERVER_ERROR,
+        status: eStatusCode.CONFLICT,
       },
       {
-        status: eStatusCode.INTERNAL_SERVER_ERROR,
+        status: eStatusCode.CONFLICT,
       },
     );
   }
@@ -70,10 +70,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json(
       {
         error: `Invalid id ${params.id}`,
-        status: eStatusCode.INTERNAL_SERVER_ERROR,
+        status: eStatusCode.CONFLICT,
       },
       {
-        status: eStatusCode.INTERNAL_SERVER_ERROR,
+        status: eStatusCode.CONFLICT,
       },
     );
   }

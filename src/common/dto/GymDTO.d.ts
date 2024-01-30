@@ -1,3 +1,5 @@
+import { GymClientDetailDTO } from './GymClientDTO';
+
 export interface GymDTO {
   id: number;
   name: string;
@@ -10,3 +12,5 @@ export interface GymDTO {
 
 export interface CreateGymDTO extends Omit<GymDTO, 'id'> {}
 export interface UpdateGymDTO extends Partial<GymDTO> {}
+
+export interface GymWithClientDTO extends Omit<GymClientDetailDTO, 'gym'> {}

@@ -1,12 +1,13 @@
 'use client';
 import { BaseSyntheticEvent, memo } from 'react';
-import s from './gymdetails.module.scss';
 import { CollapseProps, Divider, Row, Col, Space, Collapse, Button, Flex, Form } from 'antd';
-import { CustomInput, TableContainer } from '..';
-import { GymDTO } from '@/common/dto';
-import { EditOutlined, EyeOutlined, DeleteOutlined, SaveOutlined } from '@ant-design/icons';
+import { AddModal, CustomInput, TableContainer } from '..';
+import { ClientDTO, CreateGymClientDTO, GymClientDTO, GymDTO } from '@/common/dto';
+import { EditOutlined, EyeOutlined, SaveOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { Control } from 'react-hook-form';
+import { eApiRoutes } from '@/common/enums';
+import { UseMutateFunction } from '@tanstack/react-query';
 
 interface GymIdProps {
   gym: GymDTO;
@@ -15,12 +16,71 @@ interface GymIdProps {
   onAddNew: (type: 'Employee' | 'Manager') => void;
   control: Control<GymDTO, any>;
   onSubmit: (e?: BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>;
+  clients: ClientDTO[];
+  createGymClientRelation: UseMutateFunction<any, any, CreateGymClientDTO, any>;
+  gymClients: GymClientDTO[];
+  gymCLientsLoading: boolean;
 }
 
 const GymDetails: React.FC<GymIdProps> = props => {
   const items: CollapseProps['items'] = [
     {
       key: '1',
+      label: 'Clients',
+      children: (
+        <TableContainer
+          columns={[
+            {
+              title: 'Id',
+              render(value) {
+                return <p>{value?.client?.id}</p>;
+              },
+            },
+            {
+              title: 'Username',
+              render(value) {
+                return (
+                  <p>
+                    {value?.client?.first_name} {value?.client?.last_name}
+                  </p>
+                );
+              },
+            },
+            {
+              title: 'Gender',
+              render(value) {
+                return <p>{value?.client?.gender}</p>;
+              },
+            },
+            {
+              title: 'Phone number',
+              render(value) {
+                return <p>{value?.client?.phone}</p>;
+              },
+            },
+            {
+              title: 'Actions',
+              render(value) {
+                return (
+                  <Flex gap="small" wrap="wrap">
+                    <Link href={`${eApiRoutes.CLIENTS}/edit/${value?.client?.id}`}>
+                      <Button type="default" color="red" shape="default" icon={<EditOutlined />} size={'small'} />
+                    </Link>
+                    <Link href={`${eApiRoutes.CLIENTS}/show/${value?.client?.id}`}>
+                      <Button type="default" shape="default" icon={<EyeOutlined />} size={'small'} />
+                    </Link>
+                  </Flex>
+                );
+              },
+            },
+          ]}
+          isLoading={props.gymCLientsLoading}
+          data={props.gymClients}
+        />
+      ),
+    },
+    {
+      key: '2',
       label: 'Managers',
       children: (
         <TableContainer
@@ -51,17 +111,15 @@ const GymDetails: React.FC<GymIdProps> = props => {
             },
             {
               title: 'Actions',
-              width: 120,
-              render(value, record, index) {
+              render(value) {
                 return (
                   <Flex gap="small" wrap="wrap">
-                    <Link href={`/gym/edit/${value.id}`}>
+                    <Link href={`${eApiRoutes.MANAGERS}/edit/${value.id}`}>
                       <Button type="default" color="red" shape="default" icon={<EditOutlined />} size={'small'} />
                     </Link>
-                    <Link href={`/gym/show/${value.id}`}>
+                    <Link href={`${eApiRoutes.MANAGERS}/show/${value.id}`}>
                       <Button type="default" shape="default" icon={<EyeOutlined />} size={'small'} />
                     </Link>
-                    <Button danger type="default" shape="default" icon={<DeleteOutlined />} size={'small'} />
                   </Flex>
                 );
               },
@@ -70,12 +128,12 @@ const GymDetails: React.FC<GymIdProps> = props => {
           isLoading={props.isLoading}
           data={props.gym?.manager}
           showAddNew={true}
-          onAddNew={props.onAddNew}
+          onAddNew={() => props.onAddNew('Manager')}
         />
       ),
     },
     {
-      key: '2',
+      key: '3',
       label: 'Employees',
       children: (
         <TableContainer
@@ -110,17 +168,15 @@ const GymDetails: React.FC<GymIdProps> = props => {
             },
             {
               title: 'Actions',
-              width: 120,
-              render(value, record, index) {
+              render(value) {
                 return (
                   <Flex gap="small" wrap="wrap">
-                    <Link href={`/gym/edit/${value.id}`}>
+                    <Link href={`${eApiRoutes.EMPLOYEES}/edit/${value.id}`}>
                       <Button type="default" color="red" shape="default" icon={<EditOutlined />} size={'small'} />
                     </Link>
-                    <Link href={`/gym/show/${value.id}`}>
+                    <Link href={`${eApiRoutes.EMPLOYEES}/show/${value.id}`}>
                       <Button type="default" shape="default" icon={<EyeOutlined />} size={'small'} />
                     </Link>
-                    <Button danger type="default" shape="default" icon={<DeleteOutlined />} size={'small'} />
                   </Flex>
                 );
               },
@@ -129,13 +185,13 @@ const GymDetails: React.FC<GymIdProps> = props => {
           isLoading={props.isLoading}
           data={props.gym?.employee}
           showAddNew={true}
-          onAddNew={props.onAddNew}
+          onAddNew={() => props.onAddNew('Employee')}
         />
       ),
     },
   ];
   return (
-    <div className={s.gymdetails}>
+    <div>
       <Divider orientation="left">Gym informations</Divider>
       <Form>
         <Row gutter={16}>
@@ -161,7 +217,9 @@ const GymDetails: React.FC<GymIdProps> = props => {
               <CustomInput rules={{ required: 'Gym phone is required' }} label="Gym Phone" name="phone" control={props.control} type="text" />
             </Form.Item>
           </Col>
-          <div className={s.addBtn}>
+        </Row>
+        <Row gutter={16}>
+          <Col>
             <Button
               onClick={() => {
                 props.onSubmit();
@@ -172,7 +230,22 @@ const GymDetails: React.FC<GymIdProps> = props => {
               size={'large'}>
               Save
             </Button>
-          </div>
+          </Col>
+          <Col>
+            <AddModal
+              id={Number(props.gym?.id)}
+              isGym={true}
+              createGymClientRelation={props.createGymClientRelation}
+              buttonLable="Add client to the gym"
+              label="Add a client to the gym"
+              options={props?.clients?.map(client => {
+                return {
+                  label: `${client?.first_name} ${client?.last_name}`,
+                  value: client?.id,
+                };
+              })}
+            />
+          </Col>
         </Row>
       </Form>
       {!props.isCreate && (

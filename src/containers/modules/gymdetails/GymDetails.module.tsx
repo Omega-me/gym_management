@@ -1,7 +1,10 @@
 'use client';
-import { CreateGymDTO, GymDTO, UpdateGymDTO } from '@/common/dto';
+import { ClientDTO, CreateGymClientDTO, GymClientDTO, GymDTO, UpdateGymDTO } from '@/common/dto';
+import { eApiRoutes } from '@/common/enums';
 import { GymDetails, ShowGymDetails } from '@/containers/components';
+import { useClientQuery, useGymClientMutation } from '@/hooks';
 import { useGymMutation, useGymQuery } from '@/hooks/useGym';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -11,6 +14,7 @@ interface GymDetailsModuleProps {
   show?: boolean;
 }
 const GymDetailsModule: React.FC<GymDetailsModuleProps> = props => {
+  const queryClient = useQueryClient();
   const router = useRouter();
 
   const { handleSubmit: handleSubmitUpdateGym, control, setValue } = useForm<GymDTO>();
@@ -18,6 +22,7 @@ const GymDetailsModule: React.FC<GymDetailsModuleProps> = props => {
   const { data: gymData, isLoading: gymLoading } = useGymQuery<GymDTO>({
     queryConfig: {
       queryParam: props.id,
+      enabled: !!props.id,
     },
   });
 
@@ -47,15 +52,53 @@ const GymDetailsModule: React.FC<GymDetailsModuleProps> = props => {
   });
 
   const onAddNew = (type: 'Employee' | 'Manager') => {
-    router.push('');
+    switch (type) {
+      case 'Employee':
+        router.push(`${eApiRoutes.EMPLOYEES}/create`);
+        break;
+      case 'Manager':
+        router.push(`${eApiRoutes.MANAGERS}/create`);
+        break;
+      default:
+        return;
+    }
   };
+
+  const { data: clients } = useClientQuery<ClientDTO[]>();
+
+  const { mutate: createGymClientRelation } = useGymClientMutation<CreateGymClientDTO>({
+    queryConfig: {
+      onSuccessFn() {
+        queryClient.invalidateQueries({
+          queryKey: [eApiRoutes.GYMS],
+        });
+      },
+    },
+  });
+
+  const { data: gymClients, isLoading: gymCLientsLoading } = useGymQuery<GymClientDTO[]>({
+    queryConfig: {
+      queryUrl: `${props?.id}/clients`,
+    },
+  });
 
   return (
     <>
       {props.show ? (
-        <ShowGymDetails gym={gymData} isLoading={gymLoading} />
+        <ShowGymDetails gymCLientsLoading={gymCLientsLoading} gymClients={gymClients} gym={gymData} isLoading={gymLoading} />
       ) : (
-        <GymDetails isCreate={!props?.id} onSubmit={onSubmitUpdate} onAddNew={onAddNew} gym={gymData} isLoading={gymLoading} control={control} />
+        <GymDetails
+          clients={clients}
+          isCreate={!props?.id}
+          onSubmit={onSubmitUpdate}
+          onAddNew={onAddNew}
+          gym={gymData}
+          isLoading={gymLoading}
+          control={control}
+          createGymClientRelation={createGymClientRelation}
+          gymCLientsLoading={gymCLientsLoading}
+          gymClients={gymClients}
+        />
       )}
     </>
   );

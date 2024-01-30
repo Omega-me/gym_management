@@ -14,7 +14,6 @@ export const QueryProvider: React.FC<QueryProviderProps> = props => {
         queryCache: new QueryCache({
           onSuccess: (_data, query) => {
             const meta: any = query.meta;
-            console.log(meta);
           },
           onError: (_data, _query) => {},
           onSettled: (_data, _err, _query) => {},

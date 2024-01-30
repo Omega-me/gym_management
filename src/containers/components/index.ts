@@ -11,3 +11,6 @@ export { default as ManagerDetails } from './managerdetails/ManagerDetails';
 export { default as ClientDetails } from './clientdetails/ClientDetails';
 export { default as EmployeeDetails } from './employeedetails/EmployeeDetails';
 export { default as MembershipDetails } from './membershipdetails/MembershipDetails';
+export { default as Redirect } from './redirect/Redirect';
+export { default as CustomSelect } from './customselect/CustomSelect';
+export { default as AddModal } from './addmodal/AddModal';

@@ -13,14 +13,13 @@ const HomeModule = () => {
   const router = useRouter();
   const { data: gyms, isLoading: gymsLoading } = useGymQuery<Array<GymDTO>>();
 
-  const { mutate: deleteGym } = useGymMutation({
+  const { mutate: remove } = useGymMutation({
     httpConfig: {
       methode: eHttpMethod.DELETE,
     },
     queryConfig: {
       queryParam: id?.toString(),
       onSettled() {
-        console.log('settled');
         queryClient.invalidateQueries({
           queryKey: [eApiRoutes.GYMS],
         });
@@ -28,18 +27,18 @@ const HomeModule = () => {
     },
   });
 
-  const onDeleteGym = (id: number) => {
+  const onDelete = (id: number) => {
     setId(id);
     if (id) {
-      deleteGym({});
+      remove({});
     }
   };
 
   const onAddNew = () => {
-    router.push('/gym/create');
+    router.push(`${eApiRoutes.GYMS}/create`);
   };
 
-  return <Home onDeleteGym={onDeleteGym} data={gyms} isLoading={gymsLoading} onAddNew={onAddNew} />;
+  return <Home onDelete={onDelete} data={gyms} isLoading={gymsLoading} onAddNew={onAddNew} />;
 };
 
 export default HomeModule;

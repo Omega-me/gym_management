@@ -14,34 +14,19 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
       },
     );
   }
-  const data = await prisma.client.findUnique({
+  const data = await prisma.gym_client_join.findUnique({
     where: {
       id: Number(params.id),
     },
     include: {
-      membership: {
-        where: {
-          id_client: Number(params.id),
-        },
-        include: {
-          gym: {},
-          employee_membership_id_dietitianToemployee: {},
-          employee_membership_id_exercise_physiologistToemployee: {},
-          employee_membership_id_fitness_consultantToemployee: {},
-          employee_membership_id_personal_trainerToemployee: {},
-        },
-      },
-      gym_client_join: {
-        where: {
-          id_client: Number(params.id),
-        },
-      },
+      client: {},
+      gym: {},
     },
   });
   if (!data) {
     return NextResponse.json(
       {
-        error: `Client with id ${params.id} not found`,
+        error: `Record with id ${params.id} not found`,
         status: eStatusCode.NOT_FOUND,
       },
       {
@@ -66,7 +51,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
     );
   }
 
-  await prisma.client.delete({
+  await prisma.gym_client_join.delete({
     where: {
       id: Number(params.id),
     },
@@ -94,7 +79,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
   const body = await req.json();
 
-  const data = await prisma.client.update({
+  const data = await prisma.gym_client_join.update({
     data: body,
     where: {
       id: Number(params.id),

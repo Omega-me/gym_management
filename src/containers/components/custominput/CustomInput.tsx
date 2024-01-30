@@ -1,5 +1,6 @@
-import { Controller, useForm } from 'react-hook-form';
-import { Input, Button } from 'antd';
+'use client';
+import { Controller } from 'react-hook-form';
+import { Input } from 'antd';
 
 export interface CustomInputProps {
   control: any;
@@ -7,7 +8,6 @@ export interface CustomInputProps {
   rules?: Record<string, any>;
   type: string;
   disabled?: boolean;
-  id?: string;
   label?: string;
   placeholder?: string;
 }
@@ -16,13 +16,13 @@ const CustomInput = ({ type = 'text', disabled = false, ...rest }: CustomInputPr
   return (
     <div className="input-container">
       {rest.label && (
-        <label htmlFor={rest.id}>
+        <label>
           <b style={{ color: 'grey' }}>{rest.label}</b>
         </label>
       )}
       <Controller
         name={rest.name}
-        control={rest.control}
+        control={rest?.control}
         rules={rest.rules}
         render={({ field, fieldState }) => (
           <Input

@@ -1,20 +1,80 @@
 'use client';
-import { Button, Col, Collapse, CollapseProps, Divider, Row, Space } from 'antd';
+import { Button, Col, Collapse, CollapseProps, Divider, Flex, Row, Space } from 'antd';
 import { memo } from 'react';
-import { GymDTO } from '@/common/dto';
+import { GymClientDTO, GymDTO } from '@/common/dto';
 import { Input } from 'antd';
 import s from './showgymdetails.module.scss';
 import { TableContainer } from '..';
+import { eApiRoutes } from '@/common/enums';
+import { EditOutlined, EyeOutlined } from '@ant-design/icons';
+import Link from 'next/link';
 
 interface ShowGymDetailsProps {
   gym: GymDTO;
   isLoading: boolean;
+  gymClients: GymClientDTO[];
+  gymCLientsLoading: boolean;
 }
 
 const ShowGymDetails: React.FC<ShowGymDetailsProps> = props => {
   const items: CollapseProps['items'] = [
     {
       key: '1',
+      label: 'Clients',
+      children: (
+        <TableContainer
+          columns={[
+            {
+              title: 'Id',
+              render(value) {
+                return <p>{value?.client?.id}</p>;
+              },
+            },
+            {
+              title: 'Username',
+              render(value) {
+                return (
+                  <p>
+                    {value?.client?.first_name} {value?.client?.last_name}
+                  </p>
+                );
+              },
+            },
+            {
+              title: 'Gender',
+              render(value) {
+                return <p>{value?.client?.gender}</p>;
+              },
+            },
+            {
+              title: 'Phone number',
+              render(value) {
+                return <p>{value?.client?.phone}</p>;
+              },
+            },
+            {
+              title: 'Actions',
+              render(value) {
+                return (
+                  <Flex gap="small" wrap="wrap">
+                    <Link href={`${eApiRoutes.CLIENTS}/edit/${value?.client?.id}`}>
+                      <Button type="default" color="red" shape="default" icon={<EditOutlined />} size={'small'} />
+                    </Link>
+                    <Link href={`${eApiRoutes.CLIENTS}/show/${value?.client?.id}`}>
+                      <Button type="default" shape="default" icon={<EyeOutlined />} size={'small'} />
+                    </Link>
+                  </Flex>
+                );
+              },
+            },
+          ]}
+          isLoading={props.gymCLientsLoading}
+          data={props.gymClients}
+        />
+      ),
+    },
+    {
+      key: '2',
       label: 'Managers',
       children: (
         <TableContainer
@@ -43,23 +103,22 @@ const ShowGymDetails: React.FC<ShowGymDetailsProps> = props => {
               title: 'Phone Number',
               dataIndex: 'phone',
             },
-            // {
-            //   title: 'Actions',
-            //   width: 120,
-            //   render(value, record, index) {
-            //     return (
-            //       <Flex gap="small" wrap="wrap">
-            //         <Link href={`/gym/edit/${value.id}`}>
-            //           <Button type="default" color="red" shape="default" icon={<EditOutlined />} size={'small'} />
-            //         </Link>
-            //         <Link href={`/gym/show/${value.id}`}>
-            //           <Button type="default" shape="default" icon={<EyeOutlined />} size={'small'} />
-            //         </Link>
-            //         <Button danger type="default" shape="default" icon={<DeleteOutlined />} size={'small'} />
-            //       </Flex>
-            //     );
-            //   },
-            // },
+            {
+              title: 'Actions',
+              width: 120,
+              render(value) {
+                return (
+                  <Flex gap="small" wrap="wrap">
+                    <Link href={`${eApiRoutes.MANAGERS}/edit/${value.id}`}>
+                      <Button type="default" color="red" shape="default" icon={<EditOutlined />} size={'small'} />
+                    </Link>
+                    <Link href={`${eApiRoutes.MANAGERS}/show/${value.id}`}>
+                      <Button type="default" shape="default" icon={<EyeOutlined />} size={'small'} />
+                    </Link>
+                  </Flex>
+                );
+              },
+            },
           ]}
           isLoading={props.isLoading}
           data={props.gym?.manager}
@@ -67,7 +126,7 @@ const ShowGymDetails: React.FC<ShowGymDetailsProps> = props => {
       ),
     },
     {
-      key: '2',
+      key: '3',
       label: 'Employees',
       children: (
         <TableContainer
@@ -100,23 +159,21 @@ const ShowGymDetails: React.FC<ShowGymDetailsProps> = props => {
               title: 'Phone Number',
               dataIndex: 'phone',
             },
-            // {
-            //   title: 'Actions',
-            //   width: 120,
-            //   render(value, record, index) {
-            //     return (
-            //       <Flex gap="small" wrap="wrap">
-            //         <Link href={`/gym/edit/${value.id}`}>
-            //           <Button type="default" color="red" shape="default" icon={<EditOutlined />} size={'small'} />
-            //         </Link>
-            //         <Link href={`/gym/show/${value.id}`}>
-            //           <Button type="default" shape="default" icon={<EyeOutlined />} size={'small'} />
-            //         </Link>
-            //         <Button danger type="default" shape="default" icon={<DeleteOutlined />} size={'small'} />
-            //       </Flex>
-            //     );
-            //   },
-            // },
+            {
+              title: 'Actions',
+              render(value) {
+                return (
+                  <Flex gap="small" wrap="wrap">
+                    <Link href={`${eApiRoutes.EMPLOYEES}/edit/${value.id}`}>
+                      <Button type="default" color="red" shape="default" icon={<EditOutlined />} size={'small'} />
+                    </Link>
+                    <Link href={`${eApiRoutes.EMPLOYEES}/show/${value.id}`}>
+                      <Button type="default" shape="default" icon={<EyeOutlined />} size={'small'} />
+                    </Link>
+                  </Flex>
+                );
+              },
+            },
           ]}
           isLoading={props.isLoading}
           data={props.gym?.employee}
