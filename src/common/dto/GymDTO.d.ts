@@ -1,3 +1,4 @@
+import { EmployeeDTO, ManagerDTO, MembershipDTO } from '.';
 import { GymClientDetailDTO } from './GymClientDTO';
 
 export interface GymDTO {
@@ -5,9 +6,9 @@ export interface GymDTO {
   name: string;
   address: string;
   phone: string;
-  manager: any;
-  employee: any;
-  membership: any;
+  manager: ManagerDTO[];
+  employee: EmployeeDTO[];
+  membership: MembershipDTO[];
 }
 
 export interface CreateGymDTO extends Omit<GymDTO, 'id'> {}

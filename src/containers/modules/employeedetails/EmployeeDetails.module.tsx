@@ -23,7 +23,7 @@ const EmployeeDetailsModule: React.FC<EmployeeDetailsModuleProps> = props => {
     },
   });
 
-  const { handleSubmit: handleSubmitUpdateGym, control, setValue } = useForm<EmployeeDetailDTO>();
+  const { handleSubmit, control, setValue } = useForm<EmployeeDetailDTO>();
 
   useEffect(() => {
     if (data) {
@@ -47,7 +47,7 @@ const EmployeeDetailsModule: React.FC<EmployeeDetailsModuleProps> = props => {
     },
   });
 
-  const onSubmit = handleSubmitUpdateGym((data: UpdateEmployeeDTO) => {
+  const onSubmit = handleSubmit((data: UpdateEmployeeDTO) => {
     mutate(data);
   });
 

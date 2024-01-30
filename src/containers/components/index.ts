@@ -14,3 +14,4 @@ export { default as MembershipDetails } from './membershipdetails/MembershipDeta
 export { default as Redirect } from './redirect/Redirect';
 export { default as CustomSelect } from './customselect/CustomSelect';
 export { default as AddModal } from './addmodal/AddModal';
+export { default as MembershipIncludes } from './membershipincludes/MembershipIncludes';

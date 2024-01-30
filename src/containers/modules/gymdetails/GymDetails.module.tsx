@@ -32,7 +32,6 @@ const GymDetailsModule: React.FC<GymDetailsModuleProps> = props => {
       setValue('address', gymData?.address);
       setValue('name', gymData?.name);
       setValue('phone', gymData?.phone);
-      console.log('test');
     }
   }, [gymData, setValue]);
 
@@ -41,7 +40,7 @@ const GymDetailsModule: React.FC<GymDetailsModuleProps> = props => {
       queryParam: props.id,
       onSuccessFn(data) {
         if (!props.id) {
-          router.push(`/gym/edit/${(data as GymDTO).id}`);
+          router.push(`${eApiRoutes.GYMS}/edit/${(data as GymDTO).id}`);
         }
       },
     },

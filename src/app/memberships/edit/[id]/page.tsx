@@ -7,7 +7,7 @@ const IdPage = async (props: IdPageProps) => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <MembershipDetailsModule />
+      <MembershipDetailsModule id={props.params.id} />
     </HydrationBoundary>
   );
 };

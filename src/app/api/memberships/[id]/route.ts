@@ -30,7 +30,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   if (!data) {
     return NextResponse.json(
       {
-        error: `Manager with id ${params.id} not found`,
+        error: `Membership with id ${params.id} not found`,
         status: eStatusCode.NOT_FOUND,
       },
       {

@@ -1,4 +1,4 @@
-import { ClientDTO, EmployeeDTO, GymDTO } from '.';
+import { ClientDTO, EmployeeDTO, GymDTO, GymWithManagerDTO } from '.';
 
 export interface MembershipDTO {
   id: number;
